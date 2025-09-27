@@ -32,9 +32,11 @@ def evaluate_date(field_value, predicate, value):
 
     now = datetime.now()
     days = int(value)
-    if predicate.lower() == "less than":
+    predicate = predicate.lower()
+
+    if predicate in ["less than", "is_less_than"]:
         return (now - email_date).days < days
-    elif predicate.lower() == "greater than":
+    elif predicate in ["greater than", "is_greater_than"]:
         return (now - email_date).days > days
     else:
         raise ValueError(f"Unknown date predicate: {predicate}")
@@ -53,7 +55,7 @@ def evaluate_condition(email, condition):
         return evaluate_string(email.get("subject"), predicate, value)
     elif field in ["snippet", "message"]:
         return evaluate_string(email.get("snippet"), predicate, value)
-    elif field in ["date", "received_date", "received"]:
+    elif field in ["date", "date received", "received"]:
         return evaluate_date(email.get("date"), predicate, value)
     else:
         raise ValueError(f"Unknown field: {field}")
@@ -114,7 +116,7 @@ def apply_actions(email, actions, service=None):
         action_lower = action.lower()
         if action_lower == "mark_as_read" and service:
             service.users().messages().modify(
-                userId="me", id=email["id"], body={"removeLabelIds": ["UNREAD"]} # noqa
+                userId="me", id=email["id"], body={"removeLabelIds": ["UNREAD"]}  # noqa
             ).execute()
 
         elif action_lower == "mark_as_unread" and service:

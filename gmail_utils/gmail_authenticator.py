@@ -71,6 +71,10 @@ class GmailAuthenticator:
                 ):
                     self.credentials.refresh(Request())
                 else:
+                    if not os.path.exists(self.client_secrets_file):
+                        raise FileNotFoundError(
+                            f"Client secrets file not found: {self.client_secrets_file}"  # noqa
+                        )
                     flow = InstalledAppFlow.from_client_secrets_file(
                         self.client_secrets_file, self.scopes
                     )

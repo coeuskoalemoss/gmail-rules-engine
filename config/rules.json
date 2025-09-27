@@ -1,12 +1,42 @@
 [
   {
+    "name": "Interview Emails from Tenmiles",
+    "conditions_predicate": "all",
+    "conditions": [
+      {
+        "field": "From",
+        "predicate": "contains",
+        "value": "tenmiles.com"
+      },
+      {
+        "field": "Subject",
+        "predicate": "contains",
+        "value": "Interview"
+      },
+      {
+        "field": "Date received",
+        "predicate": "is_less_than",
+        "value": 2
+      }
+    ],
+    "actions": [
+      {
+        "action": "move_message",
+        "destination": "Inbox"
+      },
+      {
+        "action": "mark_as_read"
+      }
+    ]
+  },
+  {
     "name": "Mark emails from boss as read",
     "conditions_predicate": "All",
     "conditions": [
       {
         "field": "From",
         "predicate": "Contains",
-        "value": "boss@example.com"
+        "value": "kommurisiddhi@gmail.com"
       }
     ],
     "actions": ["mark_as_read"]
