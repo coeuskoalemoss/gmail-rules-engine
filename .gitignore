@@ -1,5 +1,4 @@
 myvenv/
 __pycache__/
 *.db
-*.json
 logs/
