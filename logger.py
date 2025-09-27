@@ -12,7 +12,7 @@ class LoggerInstance:
         file_level=logging.DEBUG,
     ):
         """
-        Initializes the logger with a given name, log folder/file, and log levels.
+        Initializes the logger
 
         :param name: Name of the logger, usually __name__
         :param log_folder: Folder where log files will be stored

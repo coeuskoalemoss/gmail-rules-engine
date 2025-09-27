@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Mark emails from boss as read",
+    "conditions_predicate": "All",
+    "conditions": [
+      {
+        "field": "From",
+        "predicate": "Contains",
+        "value": "boss@example.com"
+      }
+    ],
+    "actions": ["mark_as_read"]
+  },
+  {
+    "name": "Move promotional emails",
+    "conditions_predicate": "Any",
+    "conditions": [
+      {
+        "field": "Subject",
+        "predicate": "Contains",
+        "value": "Sale"
+      },
+      {
+        "field": "Subject",
+        "predicate": "Contains",
+        "value": "Promotion"
+      }
+    ],
+    "actions": ["move_to:STARRED"]
+  },
+  {
+    "name": "Flag old unread emails",
+    "conditions_predicate": "All",
+    "conditions": [
+      {
+        "field": "Received",
+        "predicate": "Greater than",
+        "value": "30"
+      }
+    ],
+    "actions": ["mark_as_unread"]
+  }
+]
