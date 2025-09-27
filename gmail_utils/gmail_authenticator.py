@@ -12,8 +12,13 @@ class GmailAuthenticator:
     """
 
     def __init__(
-        self, scopes, token_file, client_secrets_file, service_name,
-        api_version, logger=None
+        self,
+        scopes,
+        token_file,
+        client_secrets_file,
+        service_name,
+        api_version,
+        logger=None,
     ):
         """
         Initialize the GmailAuthenticator with configuration parameters.
@@ -85,9 +90,28 @@ class GmailAuthenticator:
             self.service = build(
                 self.service_name,
                 self.api_version,
-                credentials=self.credentials
+                credentials=self.credentials,  # noqa
             )
             self.logger.info("Gmail service built successfully.")
         except Exception as e:
             self.logger.error(f"Error building Gmail service: {e}")
             raise e
+
+    # this function is added forthe use of untitests
+    def get_gmail_authenticator(
+        scopes,
+        token_file,
+        client_secrets_file,
+        service_name,
+        api_version,
+        logger=None,
+    ):
+        """Module-level helper to get a GmailAuthenticator easily."""
+        return GmailAuthenticator(
+            scopes,
+            token_file,
+            client_secrets_file,
+            service_name,
+            api_version,
+            logger,
+        )

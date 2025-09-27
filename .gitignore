@@ -13,3 +13,6 @@ logs/
 # Tokens and credentials
 token.json
 config/credentials.json
+
+#coverage files
+.coverage

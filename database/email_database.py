@@ -60,11 +60,16 @@ class EmailDatabase:
                     """
                     INSERT OR IGNORE INTO emails
                     (id, from_email, to_email, subject, date, snippet)
-                    VALUES (:id, :from_email, :to_email, :subject, :date, :snippet)
+                    VALUES (
+                        :id, :from_email, :to_email, :subject, :date, :snippet
+                    )
                     """,
                     email,
                 )
             self.logger.info(f"Saved email: {email['id']}")
+        except ValueError as ve:
+            self.logger.error(f"Error saving email {email.get('id', '')}: {ve}") # noqa
+            raise
         except Exception as e:
             self.logger.error(f"Error saving email {email.get('id', '')}: {e}")
 
