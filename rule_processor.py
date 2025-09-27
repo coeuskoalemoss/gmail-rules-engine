@@ -29,9 +29,13 @@ class RuleProcessor:
         try:
             with open(self.rules_file_path, "r") as f:
                 self.rules = json.load(f)
-            self.logger.info(f"Loaded {len(self.rules)} rule(s) from {self.rules_file_path}") # noqa
+            self.logger.info(
+                f"Loaded {len(self.rules)} rule(s) from {self.rules_file_path}"
+            )  # noqa
         except FileNotFoundError:
-            self.logger.info(f"Email Rules Automation File not found: {self.rules_file_path}") # noqa
+            self.logger.info(
+                f"Email Rules Automation File not found: {self.rules_file_path}"
+            )  # noqa
         except json.JSONDecodeError as e:
             self.logger.info(f"Invalid JSON format in rules file: {e}")
 
@@ -48,15 +52,17 @@ class RuleProcessor:
             self.logger.info("No emails in the database to process.")
             return
 
-        self.logger.info(f"Processing {len(emails)} emails with {len(self.rules)} rules...") # noqa
+        self.logger.info(
+            f"Processing {len(emails)} emails with {len(self.rules)} rules..."
+        )  # noqa
 
         for email in emails:
             for rule in self.rules:
                 try:
                     if rules_engine.evaluate_rule(
-                            email,
-                            rule,
-                            ):
+                        email,
+                        rule,
+                    ):
                         actions = rule.get("actions", [])
                         rules_engine.apply_actions(
                             email,
@@ -64,9 +70,11 @@ class RuleProcessor:
                             self.service,
                         )
                         self.logger.info(
-                            f"Applied rule '{rule.get('name')}' to email: '{email.get('subject')}'" # noqa
+                            f"Applied rule '{rule.get('name')}' Succesfully"  # noqa
                         )
                 except Exception as e:
-                    self.logger.info(f"Error applying rule '{rule.get('name', 'Unnamed')}': {e}") # noqa
+                    self.logger.info(
+                        f"Error applying rule '{rule.get('name', 'Unnamed')}': {e}"
+                    )  # noqa
 
         self.logger.info("Finished processing all emails.")
