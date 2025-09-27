@@ -14,7 +14,7 @@ from logger import LoggerInstance
 
 
 class GmailRulesPipeline:
-    def __init__(self):
+    def __init__(self, max_results=10):
         self.logger = LoggerInstance(
             name=__name__, log_folder="logs", log_file="my_app.log"
         ).get_logger()
@@ -31,6 +31,7 @@ class GmailRulesPipeline:
         self.service = None
         self.email_fetcher = None
         self.rules_processor = None
+        self.max_results = max_results  # Max emails to fetch
 
     def authenticate_gmail(self):
         """Authenticate and return Gmail service object."""
@@ -38,18 +39,23 @@ class GmailRulesPipeline:
         self.service = self.gmail_authenticator.authenticate()
         self.logger.info("Gmail authentication successful.")
 
-    def fetch_emails(self, max_results=6):
+    def fetch_emails(self):
         """Fetch latest emails from Gmail and save to DB."""
-        self.logger.info(f"Fetching up to {max_results} emails...")
-        self.email_fetcher = GmailEmailFetcher(self.service, self.email_db, self.logger) # noqa
-        self.email_fetcher.fetch_and_save_emails(max_results=max_results)
+        self.logger.info(f"Fetching up to {self.max_results} emails...")
+        self.email_fetcher = GmailEmailFetcher(
+            self.service, self.email_db, self.logger
+        )  # noqa
+        self.email_fetcher.fetch_and_save_emails(max_results=self.max_results)
         self.logger.info("Email fetching completed.")
 
     def process_emails(self):
         """Process emails using automation rules."""
         self.logger.info("Processing emails using rules...")
         self.rules_processor = RuleProcessor(
-            self.email_db, self.service, EMAIL_AUTOMATION_RULES_FILE, self.logger # noqa
+            self.email_db,
+            self.service,
+            EMAIL_AUTOMATION_RULES_FILE,
+            self.logger,  # noqa
         )
         self.rules_processor.load_rules()
         self.rules_processor.process_emails()
@@ -65,5 +71,5 @@ class GmailRulesPipeline:
 
 
 if __name__ == "__main__":
-    pipeline = GmailRulesPipeline()
+    pipeline = GmailRulesPipeline(max_results=10)
     pipeline.run_pipeline()
