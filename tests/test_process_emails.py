@@ -3,27 +3,7 @@ import json
 import pytest
 from unittest.mock import Mock, patch, mock_open
 from rule_processor import RuleProcessor
-
-# Sample emails and rules
-EMAILS = [
-    {"id": "1", "subject": "Hello", "from_email": "alice@example.com"},
-    {"id": "2", "subject": "World", "from_email": "bob@example.com"},
-]
-
-RULES_JSON = [
-    {
-        "name": "Rule 1",
-        "conditions_predicate": "All",
-        "conditions": [],
-        "actions": ["mark_as_read"],
-    },
-    {
-        "name": "Rule 2",
-        "conditions_predicate": "Any",
-        "conditions": [],
-        "actions": ["mark_as_unread"],
-    },
-]
+from .data_store import EMAILS, RULES_JSON
 
 
 @pytest.fixture
@@ -43,7 +23,9 @@ def mock_logger():
     return Mock()
 
 
-@patch("builtins.open", new_callable=mock_open, read_data=json.dumps(RULES_JSON)) # noqa
+@patch(
+    "builtins.open", new_callable=mock_open, read_data=json.dumps(RULES_JSON)
+)  # noqa
 @patch("rule_processor.rules_engine.evaluate_rule", return_value=True)
 @patch("rule_processor.rules_engine.apply_actions")
 def test_process_emails(
@@ -97,7 +79,9 @@ def test_empty_rules(mock_file, mock_email_db, mock_service, mock_logger):
     mock_file.assert_called_once_with("rules.json", "r")
 
 
-@patch("builtins.open", new_callable=mock_open, read_data=json.dumps(RULES_JSON)) # noqa
+@patch(
+    "builtins.open", new_callable=mock_open, read_data=json.dumps(RULES_JSON)
+)  # noqa
 def test_no_emails(mock_file, mock_email_db, mock_service, mock_logger):
     mock_email_db.get_emails.return_value = []
     processor = RuleProcessor(
@@ -111,8 +95,13 @@ def test_no_emails(mock_file, mock_email_db, mock_service, mock_logger):
     mock_email_db.get_emails.assert_called_once()
 
 
-@patch("builtins.open", new_callable=mock_open, read_data=json.dumps(RULES_JSON)) # noqa
-@patch("rule_processor.rules_engine.evaluate_rule", side_effect=Exception("Test error")) # noqa
+@patch(
+    "builtins.open", new_callable=mock_open, read_data=json.dumps(RULES_JSON)
+)  # noqa
+@patch(
+    "rule_processor.rules_engine.evaluate_rule",
+    side_effect=Exception("Test error"),  # noqa
+)
 @patch("rule_processor.rules_engine.apply_actions")
 def test_evaluate_rule_exception(
     mock_apply, mock_eval, mock_file, mock_email_db, mock_service, mock_logger
@@ -133,10 +122,13 @@ def test_evaluate_rule_exception(
     assert mock_eval.call_count == len(EMAILS) * len(RULES_JSON)
 
 
-@patch("builtins.open", new_callable=mock_open, read_data=json.dumps(RULES_JSON)) # noqa
+@patch(
+    "builtins.open", new_callable=mock_open, read_data=json.dumps(RULES_JSON)
+)  # noqa
 @patch("rule_processor.rules_engine.evaluate_rule", return_value=True)
 @patch(
-    "rule_processor.rules_engine.apply_actions", side_effect=Exception("Action error") # noqa
+    "rule_processor.rules_engine.apply_actions",
+    side_effect=Exception("Action error"),  # noqa
 )
 def test_apply_actions_exception(
     mock_apply, mock_eval, mock_file, mock_email_db, mock_service, mock_logger
@@ -153,6 +145,4 @@ def test_apply_actions_exception(
     # evaluate_rule should be called for each email x each rule
     assert mock_eval.call_count == len(EMAILS) * len(RULES_JSON)
 
-    # apply_actions called same number of times and raised,
-    # but should not stop the loop
     assert mock_apply.call_count == len(EMAILS) * len(RULES_JSON)

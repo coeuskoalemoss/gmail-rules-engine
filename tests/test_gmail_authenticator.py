@@ -1,12 +1,12 @@
 import pytest
 from gmail_utils import GmailAuthenticator
 from unittest.mock import Mock
-
-SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
-TOKEN_FILE = "token.json"
-CLIENT_SECRETS_FILE = "client_secrets.json"
-SERVICE_NAME = "gmail"
-API_VERSION = "v1"
+from config import (
+    SCOPES,
+    SERVICE_NAME,
+    GOOGLE_API_VERSION,
+    GOOGLE_CLIENT_SECRETS_FILE,
+)
 
 
 def test_load_credentials_success(monkeypatch, tmp_path):
@@ -14,7 +14,12 @@ def test_load_credentials_success(monkeypatch, tmp_path):
     creds_path.write_text("{}")
     logger = Mock()
     auth = GmailAuthenticator.get_gmail_authenticator(
-        SCOPES, str(creds_path), CLIENT_SECRETS_FILE, SERVICE_NAME, API_VERSION, logger # noqa
+        SCOPES,
+        str(creds_path),
+        GOOGLE_CLIENT_SECRETS_FILE,
+        SERVICE_NAME,
+        GOOGLE_API_VERSION,
+        logger,  # noqa
     )
     monkeypatch.setattr("os.path.exists", lambda x: True)
     monkeypatch.setattr(
@@ -29,7 +34,12 @@ def test_load_credentials_error(monkeypatch, tmp_path):
     creds_path = tmp_path / "token.json"
     logger = Mock()
     auth = GmailAuthenticator.get_gmail_authenticator(
-        SCOPES, str(creds_path), CLIENT_SECRETS_FILE, SERVICE_NAME, API_VERSION, logger # noqa
+        SCOPES,
+        str(creds_path),
+        GOOGLE_CLIENT_SECRETS_FILE,
+        SERVICE_NAME,
+        GOOGLE_API_VERSION,
+        logger,  # noqa
     )
     monkeypatch.setattr("os.path.exists", lambda x: True)
     monkeypatch.setattr(
@@ -44,7 +54,12 @@ def test_build_service_success(monkeypatch, tmp_path):
     creds_path = tmp_path / "token.json"
     logger = Mock()
     auth = GmailAuthenticator.get_gmail_authenticator(
-        SCOPES, str(creds_path), CLIENT_SECRETS_FILE, SERVICE_NAME, API_VERSION, logger # noqa
+        SCOPES,
+        str(creds_path),
+        GOOGLE_CLIENT_SECRETS_FILE,
+        SERVICE_NAME,
+        GOOGLE_API_VERSION,
+        logger,  # noqa
     )
     monkeypatch.setattr(
         "gmail_utils.gmail_authenticator.build", lambda *a, **k: "service"
@@ -59,7 +74,12 @@ def test_build_service_error(monkeypatch, tmp_path):
     creds_path = tmp_path / "token.json"
     logger = Mock()
     auth = GmailAuthenticator.get_gmail_authenticator(
-        SCOPES, str(creds_path), CLIENT_SECRETS_FILE, SERVICE_NAME, API_VERSION, logger # noqa
+        SCOPES,
+        str(creds_path),
+        GOOGLE_CLIENT_SECRETS_FILE,
+        SERVICE_NAME,
+        GOOGLE_API_VERSION,
+        logger,  # noqa
     )
 
     def fail_build(*a, **k):

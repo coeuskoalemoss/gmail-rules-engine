@@ -32,12 +32,16 @@ def test_evaluate_string_unknown_predicate():
 
 
 def test_evaluate_date_less_than():
-    past_date = (datetime.now() - timedelta(days=5)).strftime("%a, %d %b %Y %H:%M:%S") # noqa
+    past_date = (datetime.now() - timedelta(days=5)).strftime(
+        "%a, %d %b %Y %H:%M:%S"
+    )  # noqa
     assert evaluate_date(past_date, "less than", 10) is True
 
 
 def test_evaluate_date_greater_than():
-    past_date = (datetime.now() - timedelta(days=20)).strftime("%a, %d %b %Y %H:%M:%S") # noqa
+    past_date = (datetime.now() - timedelta(days=20)).strftime(
+        "%a, %d %b %Y %H:%M:%S"
+    )  # noqa
     assert evaluate_date(past_date, "greater than", 10) is True
 
 
@@ -46,7 +50,9 @@ def test_evaluate_date_bad_format():
 
 
 def test_evaluate_date_unknown_predicate():
-    date_str = (datetime.now() - timedelta(days=5)).strftime("%a, %d %b %Y %H:%M:%S") # noqa
+    date_str = (datetime.now() - timedelta(days=5)).strftime(
+        "%a, %d %b %Y %H:%M:%S"
+    )  # noqa
     with pytest.raises(ValueError):
         evaluate_date(date_str, "unknown", 5)
 
@@ -56,7 +62,9 @@ EMAIL = {
     "to_email": "bob@example.com",
     "subject": "Hello World",
     "snippet": "This is a test email",
-    "date": (datetime.now() - timedelta(days=2)).strftime("%a, %d %b %Y %H:%M:%S"), # noqa
+    "date": (datetime.now() - timedelta(days=2)).strftime(
+        "%a, %d %b %Y %H:%M:%S"
+    ),  # noqa
 }
 
 
@@ -113,13 +121,13 @@ def test_evaluate_rule_unknown_overall_predicate():
 @pytest.fixture
 def mock_service():
     service = Mock()
-    service.users.return_value.messages.return_value.modify.return_value.execute.return_value = ( # noqa 
+    service.users.return_value.messages.return_value.modify.return_value.execute.return_value = (  # noqa
         {}
     )
     service.users.return_value.labels.return_value.list.return_value.execute.return_value = {  # noqa
         "labels": []
     }
-    service.users.return_value.labels.return_value.create.return_value.execute.return_value = { # noqa
+    service.users.return_value.labels.return_value.create.return_value.execute.return_value = {  # noqa
         "id": "new_label_id"
     }
     return service

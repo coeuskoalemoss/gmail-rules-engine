@@ -3,6 +3,7 @@ import pytest
 from unittest.mock import Mock
 from googleapiclient.errors import HttpError
 from gmail_utils.gmail_email_fetcher import GmailEmailFetcher
+from .data_store import EMAIL_MESSAGE
 
 
 @pytest.fixture
@@ -27,38 +28,7 @@ def test_fetch_and_save_emails(mock_service, mock_email_db, mock_logger):
     }
 
     # Mock get().execute() to return full message details
-    mock_service.users().messages().get().execute.side_effect = [
-        {
-            "id": "1",
-            "payload": {
-                "headers": [
-                    {"name": "From", "value": "alice@example.com"},
-                    {"name": "To", "value": "me@example.com"},
-                    {"name": "Subject", "value": "Hello"},
-                    {
-                        "name": "Date",
-                        "value": "Fri, 26 Sep 2025 12:00:00 -0700",
-                    },  # noqa
-                ]
-            },
-            "snippet": "Hello snippet",
-        },
-        {
-            "id": "2",
-            "payload": {
-                "headers": [
-                    {"name": "From", "value": "bob@example.com"},
-                    {"name": "To", "value": "me@example.com"},
-                    {"name": "Subject", "value": "World"},
-                    {
-                        "name": "Date",
-                        "value": "Fri, 26 Sep 2025 12:00:00 -0700",
-                    },  # noqa
-                ]
-            },
-            "snippet": "World snippet",
-        },
-    ]
+    mock_service.users().messages().get().execute.side_effect = EMAIL_MESSAGE
 
     fetcher = GmailEmailFetcher(
         service=mock_service, email_db=mock_email_db, logger=mock_logger
@@ -74,7 +44,9 @@ def test_fetch_and_save_emails(mock_service, mock_email_db, mock_logger):
 
 
 def test_no_messages(mock_service, mock_email_db, mock_logger):
-    mock_service.users().messages().list().execute.return_value = {"messages": []} # noqa
+    mock_service.users().messages().list().execute.return_value = {
+        "messages": []
+    }  # noqa
     fetcher = GmailEmailFetcher(
         service=mock_service, email_db=mock_email_db, logger=mock_logger
     )

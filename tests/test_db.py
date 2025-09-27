@@ -2,15 +2,7 @@ import pytest
 from database.email_database import EmailDatabase
 from unittest.mock import Mock
 import sqlite3
-
-TEST_EMAIL = {
-    "id": "12345",
-    "from_email": "sender@example.com",
-    "to_email": "me@example.com",
-    "subject": "Test email",
-    "date": "2025-09-25",
-    "snippet": "This is a test snippet",
-}
+from .data_store import TEST_EMAIL
 
 
 @pytest.fixture
