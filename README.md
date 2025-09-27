@@ -18,29 +18,34 @@ This project automates the processing of Gmail emails based on a set of user-def
 ## Setup
 
 1.  **Clone the repository:**
+
     ```bash
     git clone https://github.com/coeuskoalemoss/gmail-rules-engine.git
     cd gmail_rules_project
     ```
 
 2.  **Create and activate a virtual environment:**
+
     ```bash
     #for WSL or Ubuntu
     python3 -m venv myvenv
-    source myvenv/bin/activate 
+    source myvenv/bin/activate
     ```
-    ```bash 
+
+    ```bash
     #for Windows
     python -m venv myvenv
     myvenv/Scripts/activate
     ```
 
 3.  **Install the required dependencies:**
+
     ```bash
     pip install -r requirements.txt
     ```
 
 4.  **Configure Gmail API Credentials:**
+
     - Go to the [Google Cloud Console](https://console.cloud.google.com/).
     - Create a new project.
     - Enable the "Gmail API".
@@ -52,7 +57,6 @@ This project automates the processing of Gmail emails based on a set of user-def
 5.  **Run the initial authentication:**
     - The first time you run the application, it will open a browser window for you to authorize access to your Gmail account.
     - After authorization, a `token.json` file will be created in the root directory. This file stores your access and refresh tokens.
-
 
 ## Usage
 
@@ -70,6 +74,12 @@ To run the test suite, use `pytest`:
 
 ```bash
 pytest
+```
+
+## Run Test Coverage
+
+```bash
+pytest --cov=gmail_utils --cov=database --cov=utils --cov=logger --cov=config --cov=main --cov=rule_processor tests/
 ```
 
 ## Project Structure
