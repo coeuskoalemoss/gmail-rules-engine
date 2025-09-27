@@ -1,4 +1,15 @@
+# Python virtual environment
 myvenv/
+
+# Python cache
 __pycache__/
+
+# Database files
 *.db
+
+# Logs
 logs/
+
+# Tokens and credentials
+token.json
+config/credentials.json

@@ -25,8 +25,14 @@ This project automates the processing of Gmail emails based on a set of user-def
 
 2.  **Create and activate a virtual environment:**
     ```bash
+    #for WSL or Ubuntu
     python3 -m venv myvenv
-    source myvenv/bin/activate
+    source myvenv/bin/activate 
+    ```
+    ```bash 
+    #for Windows
+    python -m venv myvenv
+    myvenv/Scripts/activate
     ```
 
 3.  **Install the required dependencies:**
@@ -34,31 +40,19 @@ This project automates the processing of Gmail emails based on a set of user-def
     pip install -r requirements.txt
     ```
 
-4.  **Run the initial authentication:**
+4.  **Configure Gmail API Credentials:**
+    - Go to the [Google Cloud Console](https://console.cloud.google.com/).
+    - Create a new project.
+    - Enable the "Gmail API".
+    - Create credentials for an "OAuth client ID".
+    - Select "Desktop app" as the application type.
+    - Download the credentials JSON file and save it as `config/credentials.json` in the project directory.
+    - Refer to the `config/credentials.example.json` for file structure
+
+5.  **Run the initial authentication:**
     - The first time you run the application, it will open a browser window for you to authorize access to your Gmail account.
     - After authorization, a `token.json` file will be created in the root directory. This file stores your access and refresh tokens.
 
-5.  **Configure the Rules:**
-    - Edit the `config/rules.json` file to define how emails should be processed. See the example below for the structure.
-
-    ```json
-    [
-      {
-        "field": "From",
-        "predicate": "contains",
-        "value": "example@example.com",
-        "actions": [
-          {
-            "type": "move",
-            "value": "TRASH"
-          },
-          {
-            "type": "mark_as_read"
-          }
-        ]
-      }
-    ]
-    ```
 
 ## Usage
 
@@ -83,6 +77,7 @@ pytest
 ```
 gmail_rules_project/
 ├── config/
+│   ├── credentials.example.json  # Gmail API credentials example
 │   ├── credentials.json  # Gmail API credentials
 │   └── rules.json        # Email processing rules
 ├── database/
